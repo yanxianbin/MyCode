@@ -1,0 +1,79 @@
+[]为选填。<>为必填 
+ 生成SSH密钥 
+ $ ssh-keygen -t rsa -C "<name>" -f <'path/fileName'> 
+ $ cat <'path/fileName'> 
+ 
+ 
+ ------------提交操作------------ 
+ $ git add -A  					//将文件全部提交入暂存区域 
+ $ git add -A <fileName> 			//将文件提交入暂存区域 
+ $ git commit -m <message> 			//将所有暂存区域的文件提交 
+ $ git commit -a -m <message> 			//上面2句的结合版，直接将文件拉入暂存并提交 
+
+ 
+ ------------分支操作------------ 
+ $ git branch 					//查看当前分支 
+ $ git branch -r 				//列出远程分支 
+ $ git branch -a 				//列出所有分支 
+ $ git branch -d -<branchName > 			//删除分支 
+ $ git branch branchName 			//创建分支 
+ $ git branch -m <oldBranchName> <newBranchName> //重命名分支 
+ 如果想删除远程分支，使用-r -d是不起效果的，因为外网的远程分支是没有删除的。 
+ 你删除的只是一个映射到本地的远程分支，fetch一下又出来了，所以请使用 
+ $ git push :<deleteBranchName> 推一个空的分支到远程仓 
+
+ 
+ ---------合并，对比操作--------- 
+ $ git fetch   					//将本地的远程仓与外网同步（拉取） 
+ $ git merge <branchName> 			//将当前分支与另外一个分支合并 
+ $ git status           				//查看所有变更过的文件的状态（是否拉入暂存区） 
+ $ git status -s	       				//查看所有变更过的文件的状态（A代表是新添加文件，并已加入暂存区。M代表是已存在的文件，但经过修改。??代表新添加的文件，但未加入暂存区） 
+ $ git diff [--stat] <branchName> 		//使用当前分支与目标分支进行比对(--stat只显示差异文件的文件名) 
+ $ git diff [--stat] <branchNameA> <branchNameB> //2个分支进行比较(--stat只显示差异文件的文件名) 
+ $ git diff [--stat] <commitA> <commitB> 	//2次提交进行比较(--stat只显示差异文件的文件名) 
+ $ git diff <branchName> <fileName> 		//使用当前分支与目标分支的某个文件进行对比 
+ $ git difftool <branchName> 			//使用比较工具进行比较 
+ 如果合并发生冲突，想冲突的文件使用合并的分支的版本（就像传统源代码管理器的，使用服务器版本） 
+ $ git checkout --ours <fileName> 
+ $ git checkout --theirs <fileName> 
+ $ git blame <fileName>				//查看某个文件的最后一次的修改记录 
+ $ git whatchanged <fileName>			//查看某个文件的历史提交记录 
+ $ git show <hashcode> [fileName]		//查看某次提交的差异详细 
+ 
+ 
+ ------------还原操作------------ 
+ $ git checkout <fileName>  			//将指定文件还原（未跟跟踪文件，未执行add操作前的） 
+ $ git checkout .                                //全部还原 
+ $ git reset <fileName>   			//将指定的暂存区的文件还原（已跟踪的文件，执行add操作后的） 
+ $ git reset .					//全部还原 
+ 如果不小心把某个分支删了。想还原 
+ $ git reflog //查看历史记录 
+ $ git checkout <hashcode> //切换到某次提交 
+ $ git reflog 					//查看历史记录 
+ $ git checkout <hashcode> 			//切换到某次提交 
+ $ git clean -fd 				//新建的未被跟踪的文件想进行撤销操作 
+ 
+ 
+ ------------暂存操作------------ 
+ 有时接到一个紧急任务需要修复（master分支），但现在开发的东西又未完成（master分支）。 
+ 你不想commit。这时可以先使用暂存。 
+ $ git add -A                    		//首先将被跟踪的文件全部加入暂存区 
+ $ git stash                     		//将文件保护起来（保护现场） 
+ $ git checkout master           		//切换到master分支，然后进行修复 
+ $ git checkout develop          		//修复完后切换回自己一开始的开发分支     
+ $ git stash pop                 		//还原现场 
+
+ 
+ $ git stash [save] '<message>'			//将文件保护起来（保护现场） 暂存并填写自己的注解 
+ $ git stash apply <index>			//将保护区的内容还原（与git stash pop相似，pop是出列，并删除保护区内容。apply需要手动删除，用下面的drop） 
+ $ git stash drop <index>			//将保护区的内容删除 
+ $ git stash list				//可以查看保护区的一系列内容，包括上面需要的<index> 
+
+ 
+ ------------标签操作------------ 
+ $ git tag <tagName>             		//为当前分支（head）打一个标签 
+ $ git tag -d <tagName>          		//删除标签 
+ $ git tag                       		//查看所有标签 
+ $ git tag <tagName> <hashcode>      		//为某次提交打标签 
+ $ git tag -a <tagName> -m '<message>' [hashcode]//为当前提交（如果填了hashcode则为hashcode那次提交）,并写上备注信息 
+ $ git show <tagName>                            //查看标签内容 
